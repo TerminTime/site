@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Challenge | Проверь свою удачу</title>
-    <!-- Яндекс.Метрика -->
+    <!-- Yandex.Metrika counter -->
     <script type="text/javascript" >
-        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(XXXXXX, "init", {
+       ym(100788360, "init", {
             clickmap:true,
             trackLinks:true,
             accurateTrackBounce:true
-        });
+       });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Яндекс.Метрика -->
+    <noscript><div><img src="https://mc.yandex.ru/watch/100788360" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -622,7 +622,7 @@
                 <div class="counter">
                     <div class="counter-title">Посетителей в этом месяце</div>
                     <div class="counter-number" id="month">0</div>
-                    <div class="counter-description">рекорд: 15,000</div>
+                    <div class="counter-description">рекорд: <span id="record">0</span></div>
                 </div>
             </div>
             
@@ -708,20 +708,19 @@
     </div>
     
     <script>
-        // Конфигурация (можешь менять эти значения)
+        // Конфигурация
         const config = {
-            dailyGoal: 1000,  // Меняй это число для изменения цели
-            fakeUsersPerSecond: 3,  // Для симуляции роста (можно уменьшить после запуска)
-            initialOnline: 150,     // Базовое количество онлайн
-            onlineFluctuation: 50,   // Колебание онлайн пользователей
-            monthRecord: 15000       // Рекорд посещаемости
+            dailyGoal: 1000,  // Цель по посетителям
+            counterId: 100788360,  // ID вашего счетчика Яндекс.Метрики
+            oauthToken: "ВАШ_OAUTH_ТОКЕН"  // Ваш OAuth-токен для доступа к API
         };
-        
+
         // Элементы
         const onlineEl = document.getElementById('online');
         const onlineMiniEl = document.getElementById('online-mini');
         const todayEl = document.getElementById('today');
         const monthEl = document.getElementById('month');
+        const recordEl = document.getElementById('record');
         const goalEl = document.getElementById('goal');
         const goalTextEl = document.getElementById('goal-text');
         const progressEl = document.getElementById('progress');
@@ -762,58 +761,84 @@
         let currentCaptcha = generateCaptcha();
         captchaText.textContent = currentCaptcha;
         
-        // Инициализация
-        let todayCount = localStorage.getItem('todayCount') ? parseInt(localStorage.getItem('todayCount')) : 0;
-        let monthCount = localStorage.getItem('monthCount') ? parseInt(localStorage.getItem('monthCount')) : 0;
-        let lastVisitDate = localStorage.getItem('lastVisitDate');
-        
-        // Обновляем цель
-        goalEl.textContent = config.dailyGoal;
-        goalTextEl.textContent = `${config.dailyGoal} посетителей сегодня`;
-        
-        // Проверяем новый день
-        const currentDate = new Date().toDateString();
-        if (lastVisitDate !== currentDate) {
-            todayCount = 0;
-            localStorage.setItem('lastVisitDate', currentDate);
-        }
-        
-        // Симуляция онлайн пользователей (в реальном приложении замени на реальные данные)
-        function updateOnlineUsers() {
-            const online = config.initialOnline + Math.floor(Math.random() * config.onlineFluctuation);
-            onlineEl.textContent = online.toLocaleString();
-            onlineMiniEl.textContent = online.toLocaleString();
-            
-            // Каждые 5-15 секунд меняем онлайн
-            setTimeout(updateOnlineUsers, 5000 + Math.random() * 10000);
-        }
-        
-        // Симуляция новых посетителей (в реальном приложении замени на реальные данные)
-        function simulateVisitors() {
-            todayCount += Math.floor(Math.random() * 3) + 1;
-            monthCount += Math.floor(Math.random() * 3) + 1;
-            
-            // Сохраняем в localStorage
-            localStorage.setItem('todayCount', todayCount);
-            localStorage.setItem('monthCount', monthCount);
-            
-            // Обновляем счетчики
-            todayEl.textContent = todayCount.toLocaleString();
-            monthEl.textContent = monthCount.toLocaleString();
-            
-            // Обновляем прогресс
-            const progress = Math.min(100, (todayCount / config.dailyGoal) * 100);
-            progressEl.style.width = `${progress}%`;
-            progressTextEl.textContent = `${Math.round(progress)}%`;
-            
-            // Показываем телеграм ссылку если цель достигнута
-            if (todayCount >= config.dailyGoal && !tgLinkEl.style.display) {
-                tgLinkEl.style.display = 'block';
+        // Получение данных из Яндекс.Метрики
+        async function fetchMetrics() {
+            try {
+                // 1. Получаем текущих онлайн пользователей
+                const onlineResponse = await fetch(
+                    `https://api-metrika.yandex.net/stat/v1/data/bytime?metrics=ym:s:users&date1=today&date2=today&group=minute&id=${config.counterId}`, 
+                    {
+                        headers: {
+                            'Authorization': `OAuth ${config.oauthToken}`
+                        }
+                    }
+                );
+                const onlineData = await onlineResponse.json();
+                const onlineNow = onlineData.totals[0][0] || 0;
+                onlineEl.textContent = onlineNow.toLocaleString();
+                onlineMiniEl.textContent = onlineNow.toLocaleString();
+
+                // 2. Получаем посетителей за сегодня
+                const todayResponse = await fetch(
+                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=today&id=${config.counterId}`, 
+                    {
+                        headers: {
+                            'Authorization': `OAuth ${config.oauthToken}`
+                        }
+                    }
+                );
+                const todayData = await todayResponse.json();
+                const todayCount = todayData.totals[0] || 0;
+                todayEl.textContent = todayCount.toLocaleString();
+
+                // 3. Получаем посетителей за месяц
+                const monthResponse = await fetch(
+                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=month_start&id=${config.counterId}`, 
+                    {
+                        headers: {
+                            'Authorization': `OAuth ${config.oauthToken}`
+                        }
+                    }
+                );
+                const monthData = await monthResponse.json();
+                const monthCount = monthData.totals[0] || 0;
+                monthEl.textContent = monthCount.toLocaleString();
+
+                // 4. Получаем рекорд за последние 30 дней
+                const recordResponse = await fetch(
+                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=30daysAgo&date2=yesterday&id=${config.counterId}`, 
+                    {
+                        headers: {
+                            'Authorization': `OAuth ${config.oauthToken}`
+                        }
+                    }
+                );
+                const recordData = await recordResponse.json();
+                let maxRecord = 0;
+                if (recordData.data) {
+                    maxRecord = Math.max(...recordData.data.map(day => day.metrics[0]));
+                }
+                recordEl.textContent = maxRecord.toLocaleString();
+
+                // Обновляем прогресс
+                const progress = Math.min(100, (todayCount / config.dailyGoal) * 100);
+                progressEl.style.width = `${progress}%`;
+                progressTextEl.textContent = `${Math.round(progress)}%`;
+
+                // Показываем телеграм ссылку если цель достигнута
+                if (todayCount >= config.dailyGoal && !tgLinkEl.style.display) {
+                    tgLinkEl.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error('Ошибка при получении данных из Яндекс.Метрики:', error);
+                // Можно добавить fallback-логику здесь
             }
-            
-            // Запланируем следующее обновление
-            setTimeout(simulateVisitors, 1000 / config.fakeUsersPerSecond);
         }
+
+        // Обновляем данные каждую минуту
+        fetchMetrics();
+        setInterval(fetchMetrics, 60000);
         
         // Обработчики событий для капчи
         telegramBtn.addEventListener('click', function(e) {
@@ -851,10 +876,6 @@
                 document.body.style.overflow = "auto";
             }
         });
-        
-        // Запускаем симуляцию
-        updateOnlineUsers();
-        simulateVisitors();
         
         // Рекламные функции (замени на реальную рекламную сеть)
         function loadAds() {
