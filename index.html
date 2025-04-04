@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Challenge | Проверь свою удачу</title>
+    <!-- Яндекс.Метрика -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(XXXXXX, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Яндекс.Метрика -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .header-ad {
+            background: white;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .ad-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 5px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr minmax(300px, 1200px) 1fr;
+            gap: 20px;
+        }
+        
+        .left-sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .right-sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        /* Навигационное меню */
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-link {
+            padding: 10px 20px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .counters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .counter {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .counter:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .counter-title {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .counter-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 10px 0;
+        }
+        
+        .counter-description {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .goal {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .goal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .goal-title svg {
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+        
+        .goal-progress {
+            height: 12px;
+            background: rgba(203, 213, 225, 0.3);
+            border-radius: 6px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), #fbbf24);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }
+        
+        .progress-text {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .telegram-link {
+            display: none;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .telegram-card {
+            background: linear-gradient(135deg, #0088cc, #00a8ff);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 136, 204, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .telegram-card::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .telegram-card::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .telegram-text {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .telegram-btn {
+            background: white;
+            color: #0088cc;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-block;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ad-container {
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .ad-container.sticky {
+            position: sticky;
+            top: 20px;
+        }
+        
+        .ad-container.horizontal {
+            grid-column: 1 / -1;
+        }
+        
+        .ad-container.leaderboard {
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-container.square {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-container.rectangle {
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .online-users {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-dark);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .online-users::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: modalEnter 0.3s ease;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .close-modal:hover {
+            background: #f1f5f9;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .modal-text {
+            color: var(--gray);
+            margin-bottom: 25px;
+        }
+        
+        .captcha-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .captcha-text {
+            font-size: 1.8rem;
+            letter-spacing: 8px;
+            font-weight: 700;
+            margin: 15px 0;
+            color: var(--primary-dark);
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            user-select: none;
+        }
+        
+        .captcha-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            max-width: 300px;
+            margin: 15px auto;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+        
+        .captcha-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .verify-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        .verify-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            grid-column: 1 / -1;
+            background: var(--dark);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 40px;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .footer-ad {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes modalEnter {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .left-sidebar, .right-sidebar {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .counters {
+                grid-template-columns: 1fr;
+            }
+            
+            .telegram-card {
+                padding: 20px;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .counter {
+                padding: 15px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка с рекламой -->
+    <div class="header-ad">
+        <div class="ad-label">Реклама</div>
+        <div id="header-ad" class="ad-container leaderboard"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Левая боковая панель с рекламой -->
+        <div class="left-sidebar">
+            <div class="ad-container sticky square">
+                <div class="ad-label">Реклама</div>
+                <div id="left-sidebar-ad"></div>
+            </div>
+            
+            <div class="ad-container sticky rectangle" style="margin-top: 20px;">
+                <div class="ad-label">Реклама</div>
+                <div id="left-sidebar-ad-2"></div>
+            </div>
+        </div>
+        
+        <!-- Основное содержимое -->
+        <div class="main-content">
+            <h1>Тестируем сайт вместе!</h1>
+            <p class="subtitle">С Вашей помощью я тестирую свой сайт на работоспособность. За тестирование Вас ждет утешительный подарок. Спасибо!</p>
+            
+            <!-- Навигационное меню -->
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link active">Главная</a>
+                <a href="page1.html" class="nav-link">Страница 1</a>
+                <a href="page2.html" class="nav-link">Страница 2</a>
+                <a href="page3.html" class="nav-link">Страница 3</a>
+                <a href="page4.html" class="nav-link">Страница 4</a>
+            </div>
+            
+            <!-- Горизонтальный рекламный блок -->
+            <div class="ad-container horizontal">
+                <div class="ad-label">Реклама</div>
+                <div id="top-content-ad"></div>
+            </div>
+            
+            <div class="counters">
+                <div class="counter">
+                    <div class="counter-title">Сейчас онлайн</div>
+                    <div class="counter-number" id="online">0</div>
+                    <div class="counter-description">активных пользователей</div>
+                </div>
+                
+                <div class="counter">
+                    <div class="counter-title">Посетителей сегодня</div>
+                    <div class="counter-number" id="today">0</div>
+                    <div class="counter-description">из <span id="goal">1000</span> цели</div>
+                </div>
+                
+                <div class="counter">
+                    <div class="counter-title">Посетителей в этом месяце</div>
+                    <div class="counter-number" id="month">0</div>
+                    <div class="counter-description">рекорд: 15,000</div>
+                </div>
+            </div>
+            
+            <!-- Еще один рекламный блок -->
+            <div class="ad-container">
+                <div class="ad-label">Реклама</div>
+                <div id="middle-content-ad"></div>
+            </div>
+            
+            <div class="goal">
+                <h3 class="goal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
+                        <path d="M12 6C8.69 6 6 8.69 6 12C6 15.31 8.69 18 12 18C15.31 18 18 15.31 18 12C18 8.69 15.31 6 12 6ZM11 17V13H9V11H13V17H11Z" fill="currentColor"/>
+                    </svg>
+                    Наша цель: <span id="goal-text">1000 посетителей сегодня</span>
+                </h3>
+                <div class="goal-progress">
+                    <div class="progress-bar" id="progress"></div>
+                    <div class="progress-text" id="progress-text">0%</div>
+                </div>
+            </div>
+            
+            <!-- Реклама перед телеграм-кнопкой -->
+            <div class="ad-container">
+                <div class="ad-label">Реклама</div>
+                <div id="pre-telegram-ad"></div>
+            </div>
+            
+            <div class="telegram-link" id="tg-link">
+                <div class="telegram-card">
+                    <p class="telegram-text">Когда цель будет достигнута здесь появится ссылка на Telegram. Первый, кто напишет любое сообщение в чат после перехода, получит от меня подарок - Telegram Premium!</p>
+                    <button class="telegram-btn" id="telegram-btn">Получить подарок</button>
+                </div>
+            </div>
+            
+            <!-- Нижний рекламный блок -->
+            <div class="ad-container horizontal">
+                <div class="ad-label">Реклама</div>
+                <div id="bottom-content-ad"></div>
+            </div>
+        </div>
+        
+        <!-- Правая боковая панель с рекламой -->
+        <div class="right-sidebar">
+            <div class="ad-container sticky square">
+                <div class="ad-label">Реклама</div>
+                <div id="right-sidebar-ad"></div>
+            </div>
+            
+            <div class="ad-container sticky rectangle" style="margin-top: 20px;">
+                <div class="ad-label">Реклама</div>
+                <div id="right-sidebar-ad-2"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Футер с рекламой -->
+    <div class="footer">
+        <div class="footer-ad">
+            <div class="ad-label" style="color: rgba(255,255,255,0.7);">Реклама</div>
+            <div id="footer-ad" class="ad-container leaderboard" style="background: rgba(255,255,255,0.1); border: none;"></div>
+        </div>
+    </div>
+    
+    <div class="online-users">
+        Онлайн: <span id="online-mini">0</span>
+    </div>
+    
+    <!-- Модальное окно с капчей -->
+    <div class="modal" id="captcha-modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h3 class="modal-title">Подтвердите, что вы не робот</h3>
+            <p class="modal-text">Введите текст с картинки ниже, чтобы получить доступ к Telegram-каналу и возможности выиграть подарок:</p>
+            
+            <div class="captcha-container">
+                <div class="captcha-text" id="captcha-text">ABCD12</div>
+                <input type="text" class="captcha-input" id="captcha-input" placeholder="Введите текст">
+                <button class="verify-btn" id="verify-btn">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Конфигурация (можешь менять эти значения)
+        const config = {
+            dailyGoal: 1000,  // Меняй это число для изменения цели
+            fakeUsersPerSecond: 3,  // Для симуляции роста (можно уменьшить после запуска)
+            initialOnline: 150,     // Базовое количество онлайн
+            onlineFluctuation: 50,   // Колебание онлайн пользователей
+            monthRecord: 15000       // Рекорд посещаемости
+        };
+        
+        // Элементы
+        const onlineEl = document.getElementById('online');
+        const onlineMiniEl = document.getElementById('online-mini');
+        const todayEl = document.getElementById('today');
+        const monthEl = document.getElementById('month');
+        const goalEl = document.getElementById('goal');
+        const goalTextEl = document.getElementById('goal-text');
+        const progressEl = document.getElementById('progress');
+        const progressTextEl = document.getElementById('progress-text');
+        const tgLinkEl = document.getElementById('tg-link');
+        const telegramBtn = document.getElementById('telegram-btn');
+        const captchaModal = document.getElementById('captcha-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const captchaText = document.getElementById('captcha-text');
+        const captchaInput = document.getElementById('captcha-input');
+        const verifyBtn = document.getElementById('verify-btn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Реальная ссылка на Telegram (замени на свою)
+        const realTgLink = "https://t.me/your_real_channel";
+        
+        // Подсветка активной ссылки в меню
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        
+        // Генерация капчи
+        function generateCaptcha() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+            let result = "";
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // Установка капчи
+        let currentCaptcha = generateCaptcha();
+        captchaText.textContent = currentCaptcha;
+        
+        // Инициализация
+        let todayCount = localStorage.getItem('todayCount') ? parseInt(localStorage.getItem('todayCount')) : 0;
+        let monthCount = localStorage.getItem('monthCount') ? parseInt(localStorage.getItem('monthCount')) : 0;
+        let lastVisitDate = localStorage.getItem('lastVisitDate');
+        
+        // Обновляем цель
+        goalEl.textContent = config.dailyGoal;
+        goalTextEl.textContent = `${config.dailyGoal} посетителей сегодня`;
+        
+        // Проверяем новый день
+        const currentDate = new Date().toDateString();
+        if (lastVisitDate !== currentDate) {
+            todayCount = 0;
+            localStorage.setItem('lastVisitDate', currentDate);
+        }
+        
+        // Симуляция онлайн пользователей (в реальном приложении замени на реальные данные)
+        function updateOnlineUsers() {
+            const online = config.initialOnline + Math.floor(Math.random() * config.onlineFluctuation);
+            onlineEl.textContent = online.toLocaleString();
+            onlineMiniEl.textContent = online.toLocaleString();
+            
+            // Каждые 5-15 секунд меняем онлайн
+            setTimeout(updateOnlineUsers, 5000 + Math.random() * 10000);
+        }
+        
+        // Симуляция новых посетителей (в реальном приложении замени на реальные данные)
+        function simulateVisitors() {
+            todayCount += Math.floor(Math.random() * 3) + 1;
+            monthCount += Math.floor(Math.random() * 3) + 1;
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('todayCount', todayCount);
+            localStorage.setItem('monthCount', monthCount);
+            
+            // Обновляем счетчики
+            todayEl.textContent = todayCount.toLocaleString();
+            monthEl.textContent = monthCount.toLocaleString();
+            
+            // Обновляем прогресс
+            const progress = Math.min(100, (todayCount / config.dailyGoal) * 100);
+            progressEl.style.width = `${progress}%`;
+            progressTextEl.textContent = `${Math.round(progress)}%`;
+            
+            // Показываем телеграм ссылку если цель достигнута
+            if (todayCount >= config.dailyGoal && !tgLinkEl.style.display) {
+                tgLinkEl.style.display = 'block';
+            }
+            
+            // Запланируем следующее обновление
+            setTimeout(simulateVisitors, 1000 / config.fakeUsersPerSecond);
+        }
+        
+        // Обработчики событий для капчи
+        telegramBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentCaptcha = generateCaptcha();
+            captchaText.textContent = currentCaptcha;
+            captchaInput.value = "";
+            captchaModal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        });
+        
+        closeModal.addEventListener('click', function() {
+            captchaModal.style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+        
+        verifyBtn.addEventListener('click', function() {
+            if (captchaInput.value === currentCaptcha) {
+                window.open(realTgLink, '_blank');
+                captchaModal.style.display = "none";
+                document.body.style.overflow = "auto";
+            } else {
+                alert("Неверный код! Попробуйте еще раз.");
+                currentCaptcha = generateCaptcha();
+                captchaText.textContent = currentCaptcha;
+                captchaInput.value = "";
+                captchaInput.focus();
+            }
+        });
+        
+        // Закрытие модального окна при клике вне его
+        captchaModal.addEventListener('click', function(e) {
+            if (e.target === captchaModal) {
+                captchaModal.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        });
+        
+        // Запускаем симуляцию
+        updateOnlineUsers();
+        simulateVisitors();
+        
+        // Рекламные функции (замени на реальную рекламную сеть)
+        function loadAds() {
+            // Здесь будет код для загрузки рекламы (AdSense, Yandex Direct и т.д.)
+            console.log("Реклама загружается...");
+            
+            // Пример баннеров для разных позиций
+            const adHtml = `
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #94a3b8; text-align: center;">Рекламный баннер</p>
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #64748b; font-weight: 500;">Здесь будет реклама</p>
+                    </div>
+                </div>
+            `;
+            
+            const squareAdHtml = `
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #94a3b8; text-align: center;">Рекламный баннер</p>
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #64748b; font-weight: 500; text-align: center;">Боковая реклама<br>250x250</p>
+                    </div>
+                </div>
+            `;
+            
+            const rectangleAdHtml = `
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #94a3b8; text-align: center;">Рекламный баннер</p>
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #64748b; font-weight: 500; text-align: center;">Боковая реклама<br>300x600</p>
+                    </div>
+                </div>
+            `;
+            
+            const leaderboardAdHtml = `
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #94a3b8; text-align: center;">Рекламный баннер</p>
+                    <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <p style="color: #64748b; font-weight: 500; text-align: center;">Реклама 728x90</p>
+                    </div>
+                </div>
+            `;
+            
+            // Заполняем рекламные блоки
+            document.getElementById('header-ad').innerHTML = leaderboardAdHtml;
+            document.getElementById('top-content-ad').innerHTML = leaderboardAdHtml;
+            document.getElementById('middle-content-ad').innerHTML = adHtml;
+            document.getElementById('pre-telegram-ad').innerHTML = adHtml;
+            document.getElementById('bottom-content-ad').innerHTML = leaderboardAdHtml;
+            document.getElementById('footer-ad').innerHTML = leaderboardAdHtml;
+            
+            // Боковые рекламные блоки
+            document.getElementById('left-sidebar-ad').innerHTML = squareAdHtml;
+            document.getElementById('left-sidebar-ad-2').innerHTML = rectangleAdHtml;
+            document.getElementById('right-sidebar-ad').innerHTML = squareAdHtml;
+            document.getElementById('right-sidebar-ad-2').innerHTML = rectangleAdHtml;
+        }
+        
+        // Загружаем рекламу через 3 секунды после загрузки страницы
+        setTimeout(loadAds, 3000);
+    </script>
+</body>
+</html>
