@@ -4,22 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Challenge | Проверь свою удачу</title>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript" >
-       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-       m[i].l=1*new Date();
-       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-       ym(100788360, "init", {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true
-       });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/100788360" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -708,13 +692,6 @@
     </div>
     
     <script>
-        // Конфигурация
-        const config = {
-            dailyGoal: 1000,  // Цель по посетителям
-            counterId: 100788360,  // ID вашего счетчика Яндекс.Метрики
-            oauthToken: "ВАШ_OAUTH_ТОКЕН"  // Ваш OAuth-токен для доступа к API
-        };
-
         // Элементы
         const onlineEl = document.getElementById('online');
         const onlineMiniEl = document.getElementById('online-mini');
@@ -761,78 +738,41 @@
         let currentCaptcha = generateCaptcha();
         captchaText.textContent = currentCaptcha;
         
-        // Получение данных из Яндекс.Метрики
+        // Получение данных с сервера
         async function fetchMetrics() {
             try {
-                // 1. Получаем текущих онлайн пользователей
-                const onlineResponse = await fetch(
-                    `https://api-metrika.yandex.net/stat/v1/data/bytime?metrics=ym:s:users&date1=today&date2=today&group=minute&id=${config.counterId}`, 
-                    {
-                        headers: {
-                            'Authorization': `OAuth ${config.oauthToken}`
-                        }
-                    }
-                );
-                const onlineData = await onlineResponse.json();
-                const onlineNow = onlineData.totals[0][0] || 0;
-                onlineEl.textContent = onlineNow.toLocaleString();
-                onlineMiniEl.textContent = onlineNow.toLocaleString();
-
-                // 2. Получаем посетителей за сегодня
-                const todayResponse = await fetch(
-                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=today&id=${config.counterId}`, 
-                    {
-                        headers: {
-                            'Authorization': `OAuth ${config.oauthToken}`
-                        }
-                    }
-                );
-                const todayData = await todayResponse.json();
-                const todayCount = todayData.totals[0] || 0;
-                todayEl.textContent = todayCount.toLocaleString();
-
-                // 3. Получаем посетителей за месяц
-                const monthResponse = await fetch(
-                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=month_start&id=${config.counterId}`, 
-                    {
-                        headers: {
-                            'Authorization': `OAuth ${config.oauthToken}`
-                        }
-                    }
-                );
-                const monthData = await monthResponse.json();
-                const monthCount = monthData.totals[0] || 0;
-                monthEl.textContent = monthCount.toLocaleString();
-
-                // 4. Получаем рекорд за последние 30 дней
-                const recordResponse = await fetch(
-                    `https://api-metrika.yandex.net/stat/v1/data?metrics=ym:s:users&date1=30daysAgo&date2=yesterday&id=${config.counterId}`, 
-                    {
-                        headers: {
-                            'Authorization': `OAuth ${config.oauthToken}`
-                        }
-                    }
-                );
-                const recordData = await recordResponse.json();
-                let maxRecord = 0;
-                if (recordData.data) {
-                    maxRecord = Math.max(...recordData.data.map(day => day.metrics[0]));
-                }
-                recordEl.textContent = maxRecord.toLocaleString();
-
+                // Определяем текущую страницу
+                const pageName = currentPage.replace('.html', '') || 'index';
+                
+                const response = await fetch(`counter.php?page=${pageName}`);
+                const data = await response.json();
+                
+                // Обновляем отображение
+                onlineEl.textContent = data.online.toLocaleString();
+                onlineMiniEl.textContent = data.online.toLocaleString();
+                todayEl.textContent = data.today.toLocaleString();
+                monthEl.textContent = data.month.toLocaleString();
+                recordEl.textContent = data.record.toLocaleString();
+                goalEl.textContent = data.dailyGoal.toLocaleString();
+                goalTextEl.textContent = `${data.dailyGoal.toLocaleString()} посетителей сегодня`;
+                
                 // Обновляем прогресс
-                const progress = Math.min(100, (todayCount / config.dailyGoal) * 100);
-                progressEl.style.width = `${progress}%`;
-                progressTextEl.textContent = `${Math.round(progress)}%`;
-
+                progressEl.style.width = `${data.progress}%`;
+                progressTextEl.textContent = `${Math.round(data.progress)}%`;
+                
                 // Показываем телеграм ссылку если цель достигнута
-                if (todayCount >= config.dailyGoal && !tgLinkEl.style.display) {
+                if (data.today >= data.dailyGoal && !tgLinkEl.style.display) {
                     tgLinkEl.style.display = 'block';
                 }
-
             } catch (error) {
-                console.error('Ошибка при получении данных из Яндекс.Метрики:', error);
-                // Можно добавить fallback-логику здесь
+                console.error('Ошибка при получении данных:', error);
+                // Fallback - случайные данные
+                const fallbackOnline = Math.floor(Math.random() * 50 + 10);
+                onlineEl.textContent = fallbackOnline;
+                onlineMiniEl.textContent = fallbackOnline;
+                todayEl.textContent = Math.floor(Math.random() * 300 + 100);
+                monthEl.textContent = Math.floor(todayEl.textContent * 15);
+                recordEl.textContent = Math.max(recordEl.textContent, todayEl.textContent);
             }
         }
 
